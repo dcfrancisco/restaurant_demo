@@ -2,3 +2,7 @@ fastapi
 uvicorn
 pytest 
 httpx
+pydantic
+motor
+aiofiles
+python-dotenv

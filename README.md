@@ -1,115 +1,183 @@
-# FastAPI Sample Project
+# FastAPI Restaurant Service
 
-This is a sample FastAPI project that demonstrates a simple API with a single endpoint.
+This is a sample FastAPI project that demonstrates a simple restaurant service API using MongoDB.
 
 ## Description
 
-This project uses FastAPI to create a simple web API. The API has one endpoint that returns a JSON response with a greeting message.
+This project uses FastAPI to create a web API for managing restaurant data. The API allows you to create, read, update, and delete restaurant records stored in a MongoDB database.
+
+Based on [this repository](https://github.com/trishagee/restaurant-service).
 
 ## Requirements
 
-- Python 3.10 or higher
-- `pip` (Python package installer)
+- Docker
+- Docker Compose
 
 ## Setup
 
 1. **Clone the repository**:
 
    ```sh
-   git clone <repository-url>
-   cd FastAPI_Sample
+   git clone https://github.com/dcfrancisco/restaurant_demo
+   cd restaurant_demo
+   ```
 
-2. **Create and activate a virtual environment**:
+## Build and run the Docker containers:
 
-   ```sh
-    python -m venv venv
-    source venv/bin/activate
+```sh
+docker-compose up --build
+```
 
-3. **Install the dependencies**:
+## Access the API:
 
-   ```sh
-   pip install -r requirements.txt
+Open a web browser and go to `http://localhost:8000/`. You should see a JSON response with a greeting message.
 
-4. **Run the application**:
+## Access the API using Swagger UI:
 
-   ```sh
-   uvicorn main:app --reload
+Open a web browser and go to `http://localhost:8000/docs`. You should see the Swagger UI page with the API documentation.
 
-5. **Access the API**:
+## API Endpoints
 
-   Open a web browser and go to `http://localhost:8000/`.
-   You should see a JSON response with a greeting message.
+### GET /
+**Returns a greeting message.**
 
-6. **Access the API using Swagger UI**:
+- **URL**: `/`
+- **Method**: `GET`
+- **Response**:
 
-   Open a web browser and go to `http://localhost:8000/docs`.
-   You should see the Swagger UI page with the API documentation.
-
-**API Endpoints**:
-
-###GET /
-
-Returns a greeting message.
-
-###URL: /
-
-Method: GET
-
-Response:
 ```json
 {
-    "Hello": "World"
+  "message": "Welcome to the Restaurant Service API"
 }
 ```
 
-### GitHub Copilot
-Here is the updated README.md file with the new POST endpoint information:
+### GET /restaurants
+**Returns a list of all restaurants.**
 
-Create and activate a virtual environment:
+- **URL**: `/restaurants`
+- **Method**: `GET`
+- **Response**:
 
-Install the dependencies:
+```json
+[
+    {
+        "id": "1",
+        "name": "Pasta Palace",
+        "address": "123 Noodle Street"
+    },
+    ...
+]
+```
 
-Running the Application
-Run the application:
+### GET /restaurants/{id}
+**Returns a restaurant by ID.**
 
-Access the API:
+- **URL**: `/restaurants/{id}`
+- **Method**: `GET`
+- **Response**:
 
-Open a web browser and go to http://localhost:8000/. You should see a JSON response with a greeting message.
-
-Access the API using Swagger UI:
-
-Open a web browser and go to http://localhost:8000/docs. You should see the Swagger UI page with the API documentation.
-
-API Endpoints
-GET /
-Returns a greeting message.
-
-URL: /
-
-Method: POST
-
-Response:
-
-``` json
+```json
 {
-    "username": "john_doe",
-    "email": "john@example.com"
+    "id": "1",
+    "name": "Pasta Palace",
+    "address": "123 Noodle Street"
 }
 ```
-POST /get_user/{user_id}
 
-``` 
-curl -X 'POST' \
-  'http://127.0.0.1:8000/get_user/' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "username": "danny", 
-  "email": "dcfran@gmail.com"
-}'
-{"username":"danny","email":"dcfran@gmail.com"}%  
+### POST /restaurants
+**Creates a new restaurant.**
+
+- **URL**: `/restaurants`
+- **Method**: `POST`
+- **Request Body**:
+
+```json
+{
+    "name": "Pasta Palace",
+    "address": "123 Noodle Street"
+}
 ```
+
+- **Response**:
+
+```json
+{
+    "id": "1",
+    "name": "Pasta Palace",
+    "address": "123 Noodle Street"
+}
+```
+
+### PUT /restaurants/{id}
+**Replaces an existing restaurant by ID.**
+
+- **URL**: `/restaurants/{id}`
+- **Method**: `PUT`
+- **Request Body**:
+
+```json
+{
+    "id": "1",
+    "name": "Pasta Palace",
+    "address": "123 Noodle Street"
+}
+```
+
+- **Response**:
+
+```json
+{
+    "id": "1",
+    "name": "Pasta Palace",
+    "address": "123 Noodle Street"
+}
+```
+
+### DELETE /restaurants/{id}
+**Deletes a restaurant by ID.**
+
+- **URL**: `/restaurants/{id}`
+- **Method**: `DELETE`
+- **Response**:
+
+```json
+{
+    "message": "Restaurant with id 1 has been deleted"
+}
+```
+
+## Docker Compose Setup
+
+The project includes a `docker-compose.yml` file to set up the FastAPI application and MongoDB.
+
+**docker-compose.yml**:
+
+```yaml
+version: "3.8"
+
+services:
+  mongodb:
+    image: mongo:5.0.5
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+
+  restaurant-service:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=restaurant_db
+    depends_on:
+      - mongodb
+```
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
