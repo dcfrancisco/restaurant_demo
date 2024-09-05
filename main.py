@@ -48,6 +48,11 @@ async def exists_by_id(restaurant_id: str):
     )
 
 
+@app.get("/")
+def read_root():
+    return {"message": "Hello, World!"}
+
+
 # FastAPI routes
 @app.get("/restaurants", response_model=List[Restaurant])
 async def get_restaurants():
