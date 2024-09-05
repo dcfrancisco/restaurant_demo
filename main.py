@@ -50,7 +50,7 @@ async def exists_by_id(restaurant_id: str):
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello, World!"}
+    return {"message": "Welcome to the Restaurant Service API"}
 
 
 # FastAPI routes
