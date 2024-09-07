@@ -1,15 +1,5 @@
-from motor.motor_asyncio import AsyncIOMotorClient
-import os
 from models.restaurant import Restaurant
-
-# MongoDB connection setup
-mongodb_host = os.getenv("MONGODB_HOST", "localhost")
-mongodb_port = int(os.getenv("MONGODB_PORT", 27017))
-mongodb_database = os.getenv("MONGODB_DATABASE", "restaurant_db")
-
-client = AsyncIOMotorClient(f"mongodb://{mongodb_host}:{mongodb_port}")
-db = client[mongodb_database]
-restaurant_collection = db["restaurants"]
+from database import restaurant_collection
 
 
 # Repository functions
